@@ -1,0 +1,46 @@
+#
+# Date Created: 11/03/2022.
+#
+# References:
+#   https://docs.python.org/3/howto/logging.html#logging-basic-tutorial
+#   https://gist.github.com/kingspp/9451566a5555fb022215ca2b7b802f19
+#   https://stackoverflow.com/questions/10973362/python-logging-function-name-file-name-line-number-using-a-single-file
+#
+version: 1
+disable_existing_loggers: true
+
+formatters:
+    standard:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+    standard_ext_1:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)s - %(funcName)s() - %(message)s"
+
+    error:
+        format: "%(levelname)s <PID %(process)d:%(processName)s> %(name)s.%(funcName)s(): %(message)s"
+
+handlers:
+    file:
+        class: logging.handlers.TimedRotatingFileHandler
+        level: DEBUG
+        formatter: standard_ext_1
+        filename: ompdev.log
+        when: "d"
+        interval: 1
+        backupCount: 5
+        encoding: utf-8
+
+loggers:
+    admin:
+        level: DEBUG
+        handlers: [ file ]
+        propagate: no
+        
+    trx: 
+        level: DEBUG
+        handlers: [ file ]
+        propagate: no
+        
+root:
+    level: DEBUG
+    handlers: [ file ]
