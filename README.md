@@ -142,3 +142,8 @@ DATABASE="australian_postcode.db"
 
 [ MIT license ](https://github.com/behai-nguyen/bh-aust-postcode/blob/main/LICENSE)
 
+## jQuery plugin: bhAustPostcode
+
+A jQuery plugin which enables searching for Australian postcodes based on locality aka suburb.
+
+Repo: https://github.com/behai-nguyen/bh-aust-postcode/tree/main/jquery-bhaustpostcode
