@@ -1,0 +1,55 @@
+/******************************************
+ *
+ * CSS for JQuery plugin which enables searching for Australian 
+ * postcodes based on locality aka suburb.
+ *
+ * The back-end this plugin uses is the web API written in Python.
+ * The repo address is:
+ *
+ *   https://github.com/behai-nguyen/bh-aust-postcode 
+ *
+ * The UI library used is Bootstrap 5.0.
+ *
+ * @author          Be Hai Nguyen -- https://behainguyen.wordpress.com/
+ * @copyright       Copyright (c) 2023 Be Hai Nguyen.
+ *
+ * @license         Dual licensed under the MIT and GPL licenses:
+ *                  http://www.opensource.org/licenses/mit-license.php
+ *                  http://www.gnu.org/licenses/gpl.html
+ *
+ * @github          https://github.com/behai-nguyen/bh-aust-postcode/jquery-bhaustpostcode
+ * @version         1.0.0
+ *
+ ******************************************/
+
+/* Do not overwrite these. */
+.bh-aust-postcode.result-panel .container {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.bh-aust-postcode .item-highlight { cursor: pointer; }
+.bh-aust-postcode .item-normal { cursor: default; }
+
+/* Default theme: theme-safe. */
+
+.bh-aust-postcode.theme-safe.result-panel { 
+    background-color: var( --bs-gray-300 );
+    border: 2px solid var( --bs-gray-600 ); 
+}
+
+.bh-aust-postcode.theme-safe .item-normal { background-color: transparent; }
+.bh-aust-postcode.theme-safe .item-highlight { background-color: gray; }
+
+/* Additional theme: theme-eyesore. */
+
+.bh-aust-postcode.theme-eyesore.result-panel { 
+    border: 2px solid var( --bs-blue ); 
+	background-color: var( --bs-pink );
+}
+
+.bh-aust-postcode.theme-eyesore .item-normal { font-style: normal; }
+.bh-aust-postcode.theme-eyesore .item-highlight { 
+    background-color: lightblue; 
+	font-style: italic;
+}
