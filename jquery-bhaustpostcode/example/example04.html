@@ -1,0 +1,118 @@
+<!--****************************************
+ *
+ * A JQuery plugin which enables searching for Australian postcodes
+ * based on locality aka suburb.
+ *
+ * Usage example 04: set input group to default size and large size.
+ *
+ * The back-end this plugin uses is the web API written in Python.
+ * The repo address is:
+ *
+ *   https://github.com/behai-nguyen/bh-aust-postcode
+ *
+ * The UI library used is Bootstrap 5.0.
+ *
+ * @author          Be Hai Nguyen -- https://behainguyen.wordpress.com/
+ * @copyright       Copyright (c) 2023 Be Hai Nguyen.
+ *
+ * @license         Dual licensed under the MIT and GPL licenses:
+ *                  http://www.opensource.org/licenses/mit-license.php
+ *                  http://www.gnu.org/licenses/gpl.html
+ *
+ * @github          https://github.com/behai-nguyen/bh-aust-postcode/jquery-bhaustpostcode
+ * @version         1.0.0
+ *
+ ****************************************-->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <title>jQuery plugin bhAustPostcode usage Example 04</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- JQuery -->
+    <script src="http://localhost/work/jquery/js/jquery-3.6.0.js"></script>
+
+    <!-- Bootstrap 5.0 core. -->
+	<link href="http://localhost/work/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<script src="http://localhost/work/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
+	<!-- Bootstrap Font Icon CSS -->
+	<link href="http://localhost/work/bootstrap/icons-1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+
+	<script src="http://localhost/work/js/delay_callback_func.js"></script>
+	<script src="http://localhost/work/js/css_funcs.js"></script>
+	<script src="http://localhost/work/js/content_types.js"></script>
+	<script src="http://localhost/work/js/http_status.js"></script>
+	<script src="http://localhost/work/js/ajax_funcs.js"></script>
+	<script src="http://localhost/work/js/elem_height_funcs.js"></script>
+	<script src="http://localhost/work/js/bootstrap_funcs.js"></script>
+    <script src="http://localhost/work/js/drags.js"></script>
+    <script src="http://localhost/work/js/bootstrap_dialogs.js"></script>
+
+    <!-- jQuery plugin bhAustPostcode's CSS and JS. --->
+	<link href="http://localhost/work/jquery-bhaustpostcode/src/bhAustPostcode.css" rel="stylesheet">
+    <script src="http://localhost/work/jquery-bhaustpostcode/src/bhAustPostcode.js"></script>
+
+    <!-- All of the above CSS and JS inclusions can be replaced by the following:
+
+	<link href="http://localhost/work/jquery-bhaustpostcode/example/bh-aust-postcode.min.css" rel="stylesheet">
+    <script src="http://localhost/work/jquery-bhaustpostcode/example/bh-aust-postcode.min.js"></script>
+	
+	See: ../minify/css-minify.bat, ../minify/js-minify.bat.
+    -->
+	
+    <script>
+		$( document ).ready( function() {
+
+			$( '#austPostcode1' ).bhAustPostcode({
+				localityName: 'suburb1',
+				localityId: 'suburb1',
+				stateName: 'state1',
+				stateId: 'state1',
+				postcodeName: 'postcode1',
+				postcodeId: 'postcode1',
+				
+				// Overwrite bootstrapInputGroupSize, set to default.
+				bootstrapInputGroupSize: ''
+			});
+			
+			$( '#austPostcode2' ).bhAustPostcode({
+				localityName: 'suburb2',
+				localityId: 'suburb2',
+				stateName: 'state2',
+				stateId: 'state2',
+				postcodeName: 'postcode2',
+				postcodeId: 'postcode2',
+				
+				// Overwrite bootstrapInputGroupSize, set to input-group-lg.
+				bootstrapInputGroupSize: 'input-group-lg'
+			});			
+        });
+
+    </script>
+</head>
+
+<body>
+	<div class="container" style="max-width:700px;">
+	    <div class="row g-3 align-items-center my-3">
+		    <div class="col">
+			    <h3>jQuery plugin bhAustPostcode usage Example 04.</h3>
+			</div>
+		</div>
+
+	    <div class="row g-3 align-items-center mb-2">
+		    <div class="col-3">Suburb (default size)</div>
+			<div class="col" id="austPostcode1"></div>
+		</div>
+	</div>
+	
+	<div class="container" style="max-width:700px;">
+	    <div class="row g-3 align-items-center mb-2">
+		    <div class="col-3">Suburb (large size)</div>
+			<div class="col" id="austPostcode2"></div>
+		</div>
+	</div>	
+</body>
+</html>
