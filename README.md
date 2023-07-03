@@ -10,6 +10,16 @@ https://www.matthewproctor.com/Content/postcodes/australian_postcodes.json
 
 This web API uses only ``locality``, ``state`` and ``postcode`` fields.
 
+## Stable Revision 
+
+### Tag <code>v0.0.1</code> -- July 3rd, 2023
+
+This revision uses SQLite database file. Clone with:
+
+```
+git clone -b v0.0.1 https://github.com/behai-nguyen/bh-aust-postcode.git
+```
+
 ## Project Setup and Run the Development Web Server
 
 ### Windows 10 Setup
