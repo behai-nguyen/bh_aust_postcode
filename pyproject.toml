@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bh-aust-postcode"
-version = "0.0.1"
+version = "0.0.2"
 description = "Australian Postcode Services."
 
 readme = "README.md"
@@ -23,6 +23,7 @@ dependencies = [
     'Flask-RESTX',
     'Flask-Cors',    
     'python-dotenv',
+    'psycopg2-binary',
     'requests',    
     'click',
     'simplejson',
