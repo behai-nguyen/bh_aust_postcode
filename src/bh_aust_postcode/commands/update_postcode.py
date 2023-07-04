@@ -10,38 +10,44 @@ import logging
 import requests
 import traceback
 import sys
-import sqlite3
-import simplejson as json
+import psycopg2
 
 from flask import current_app as app
 
 from bh_utils.json_funcs import dumps
 
-from bh_aust_postcode.utils import print_log
+from bh_aust_postcode.config import get_database_connection
+from bh_aust_postcode.utils import (
+    print_log,
+    format_sql_statement,
+)
 
 logger = logging.getLogger('admin')
 
 def __schema_filename():
-    """Get SQLite scheme file name to create the database file name."""
+    """Get SQLite scheme file name to create the database file name.
 
-    return os.path.join(os.path.dirname(__file__), '', app.config['SCHEMA'])
+    :return: full path of PostgreSQL database creation script: create schema and table.
+    :rtype: str.
+    """
 
-def __database_filename():
-    """Get SQLITE database file name."""
-
-    return os.path.join(app.instance_path, '', app.config['DATABASE'])
+    return os.path.join(os.path.dirname(__file__), '', app.config['DB_CREATE_SCRIPT'])
 
 def create_database():
     """Creates a new SQLite database file, overwrites any existing one."""
     try:
-        connection = sqlite3.connect(__database_filename())
+        db_conn_params = get_database_connection()
+        
+        connection = psycopg2.connect(**db_conn_params)
         cursor = connection.cursor()
 
         with open(__schema_filename(), 'r') as sqlite_file:
             sql_script = sqlite_file.read()
 
-        cursor.executescript(sql_script)
+        cursor.execute(format_sql_statement(sql_script))
         cursor.close()
+
+        connection.commit()
 
     except Exception as e:
         print_log(logger, 'Error creating database file {!r}.'.format(e), 'exception')
@@ -68,11 +74,17 @@ def get_json_content() -> tuple:
     return True, response.json()
 
 def write_downloaded_json_content(json: dict) -> None:
-    """Write downloaded postcode JSON content to a JSON file on disk.
+    """Conditionally write downloaded postcode JSON content to a JSON 
+    file on disk.
+
+    If environment variable KEEP_DOWNLOADED_POSTCODES is True, then
+    write the downloaded source postcodes to disk. 
 
     :param JSON json: downloaded postcodes to write to a local JSON file.    
     """
-
+    if (not app.config['KEEP_DOWNLOADED_POSTCODES']):
+        return
+    
     local_dt_str = datetime.strftime(datetime.now(), "%Y%m%d_%H%M%S_%f")[:-3]
     file_name = os.path.join(app.instance_path, '', f"australian_postcodes_{local_dt_str}.json")
 
@@ -89,7 +101,8 @@ def extract_and_insert():
     """
 
     try:
-        connection = sqlite3.connect(__database_filename())
+        db_conn_params = get_database_connection()
+        connection = psycopg2.connect(**db_conn_params)
         cursor = connection.cursor()
 
         res, data = get_json_content()
@@ -115,10 +128,10 @@ def extract_and_insert():
             state = itm['state']
             postcode = itm['postcode']
 
-            sqlite_insert_query = ("INSERT INTO postcode (locality, state, postcode)  "
-                                   f"VALUES ('{locality}', '{state}', '{postcode}')")
+            insert_query = ("INSERT INTO {0}.{1} (locality, state, postcode)  "
+                            f"VALUES ('{locality}', '{state}', '{postcode}')")
 
-            count = cursor.execute(sqlite_insert_query)
+            cursor.execute(format_sql_statement(insert_query))
             total_inserted += 1
 
         connection.commit()

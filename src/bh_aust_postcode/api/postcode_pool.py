@@ -11,12 +11,17 @@ Relevant test modules:
     * ./tests/test_postcode_pool.py
 """
 
-import os
 import logging
 
-import sqlite3
+import psycopg2
 
-from bh_aust_postcode.utils import print_log
+from flask import current_app as app
+
+from bh_aust_postcode.utils import (
+    print_log,
+    format_sql_statement,
+)
+from bh_aust_postcode.config import get_database_connection
 
 logger = logging.getLogger('admin')
 
@@ -45,51 +50,109 @@ class PostcodePool(object, metaclass=PostcodePoolMeta):
     #: Class attribute. List of postcodes. Each postcode dictionary has the following text fields: ``locality``, ``state`` and ``postcode``.
     postcodes = []
 
-    def load(self, database_file: str, force_reload=False) -> tuple:
-        """Load all postcodes from the instance SQLite database file into :attr:`~.PostcodePool.postcodes`.
+    def __entity_exists(self, connection: object, sql_statement: str) -> bool:
+        """Check if a PostgreSQL database schema or table exists.
 
-        :param str database_file: absolute location of the instance SQLite database file.
-        :param bool force_reload: force reloading postcodes from the instance SQLite database file.
+        :param object connection: an already established PostgreSQL connection.
+        :param sql_statement str: the complete SQL entity selection.
+
+        :return: a Boolean value which indicates whether an entity exists.
+        :rtype: bool.
+        """
+        try:
+            cursor = connection.cursor()
+            cursor.execute(sql_statement)
+            exists = cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            return exists
+        
+    def __schema_exists(self, connection: object) -> bool:
+        """Check if the database has a schema whose name matches configured schema name.
+
+        :param object connection: an already established PostgreSQL connection.
+
+        :return: a Boolean value which indicates if the schema exists.
+        :rtype: bool.
+        """
+
+        sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '{0}')"
+        return self.__entity_exists(connection, format_sql_statement(sql))
+    
+    def __table_exists(self, connection: object) -> bool:
+        """Check if the database and schema has a table whose name matches configured 
+        table name.
+
+        :param object connection: an already established PostgreSQL connection.
+
+        :return: a Boolean value which indicates if the table exists.
+        :rtype: bool.
+        """
+
+        sql = ("SELECT EXISTS( "
+                "SELECT 1 FROM information_schema.tables "
+                "WHERE table_schema = '{0}' AND table_name = '{1}')")
+        return self.__entity_exists(connection, format_sql_statement(sql))
+    
+    def __get_database_info(self) -> tuple:
+        return app.config['SCHEMA_NAME'], app.config['POSTCODE_TABLE_NAME']
+
+    def load(self, force_reload=False) -> tuple:
+        """Load all postcodes from the database into :attr:`~.PostcodePool.postcodes`.
+
+        :param bool force_reload: force reloading postcodes the database.
 
         :return: a Boolean result and a possible error message. 
         :rtype: tuple.
         """
-
-        if (not os.path.exists(database_file)):
-            msg = "Database file {!r} does not yet exist.".format(database_file)
-            print_log(logger, msg, 'info')
-            return False, msg
-
-        if force_reload:
-            logger.info('Force reloading.')
-            PostcodePool.postcodes.clear()
-        else:
-            if len(PostcodePool.postcodes) > 0:
-                logger.info('Postcodes have already been loaded.')
-                return True, ''
-
         try:
+            db_conn_params = get_database_connection()            
+            connection = psycopg2.connect(**db_conn_params)
+
+            result = False
+            message = ''
+
+            schema_name, postcode_table_name = self.__get_database_info()
+
+            if (not self.__schema_exists(connection)):
+                message = "Database schema {!r} does not yet exist.".format(schema_name)
+                print_log(logger, message, 'info')
+                return
+            
+            if (not self.__table_exists(connection)):
+                message = "Database table {!r} does not yet exist.".format(postcode_table_name)
+                print_log(logger, message, 'info')
+                return
+
             result = True
-            error_message = ''
 
-            sqliteConnection = sqlite3.connect(database_file)
-            cursor = sqliteConnection.cursor()
+            if force_reload:
+                logger.info('Force reloading.')
+                PostcodePool.postcodes.clear()
+            else:
+                if len(PostcodePool.postcodes) > 0:
+                    logger.info('Postcodes have already been loaded.')
+                    return
 
-            cursor.execute('SELECT * FROM postcode ORDER BY locality, state, postcode')
+            cursor = connection.cursor()
+
+            cursor.execute(format_sql_statement('SELECT * FROM {0}.{1} ORDER BY locality, state, postcode'))
             for row in cursor:
                 postcode = {'locality': row[1], 'state': row[2], 'postcode': row[3]}
                 PostcodePool.postcodes.append(postcode)
             cursor.close()
 
-        except sqlite3.Error as error:
+            logger.info(f'Loaded {len(PostcodePool.postcodes)} postcodes into pool.')
+
+        except Exception as error:
             result = False
-            error_message = str(error)
-            logger.exception(error_message)
+            message = str(error)
+            logger.exception(message)
 
         finally:
-            if sqliteConnection:
-                sqliteConnection.close()
-            return result, error_message
+            if connection:
+                connection.close()
+            return result, message
 
     def search(self, locality: str) -> list:
         """Match postcodes based on locality / suburb. It is a partial match.
@@ -116,5 +179,5 @@ class PostcodePool(object, metaclass=PostcodePoolMeta):
     
 postcode_pool = PostcodePool()
 
-def load_postcode(database_file: str):
-    postcode_pool.load(database_file)
+def load_postcode():
+    postcode_pool.load()
