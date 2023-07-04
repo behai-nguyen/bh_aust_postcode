@@ -33,5 +33,5 @@ def ensure_postcodes_loaded(app):
     Postcodes loaded only once during application / test lifetime.
     """
     
-    load_postcode(database_filename(app))
+    load_postcode()
     assert postcode_pool.count >= 18000
