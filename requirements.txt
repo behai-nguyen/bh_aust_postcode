@@ -1,0 +1,10 @@
+tomli==2.0.1
+Flask==2.3.2
+Flask-Cors==4.0.0
+flask-restx==1.1.0
+click==8.1.3
+psycopg2-binary==2.9.6
+python-dotenv==1.0.0
+simplejson==3.19.1
+bh-apistatus==0.0.9
+bh-utils==0.0.3
