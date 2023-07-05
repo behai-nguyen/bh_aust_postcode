@@ -36,15 +36,15 @@ class Config:
     POSTCODE_TABLE_NAME = environ.get('POSTCODE_TABLE_NAME')
 
     #: PostgreSQL host name.
-    HOST = environ.get('HOST')
+    PGHOST = environ.get('PGHOST')
     #: PostgreSQL database. This database must exist on host.
-    DATABASE = environ.get('DATABASE')
+    PGDATABASE = environ.get('PGDATABASE')
     #: PostgreSQL user. This is the PostgreSQL user who has access to database.
-    PG_USER = environ.get('PG_USER')
+    PGUSER = environ.get('PGUSER')
     #: PostgreSQL password. This is password to log into the PostgreSQL.
-    PASSWORD = environ.get('PASSWORD')
+    PGPASSWORD = environ.get('PGPASSWORD')
     #: PostgreSQL port. The PostgreSQL host port.
-    PORT = environ.get('PORT')
+    PGPORT = environ.get('PGPORT')
 
 def get_config():
     """Retrieve environment configuration settings.
@@ -64,9 +64,9 @@ def get_database_connection():
     cfg = get_config()
 
     return {
-        'host': cfg.HOST,
-        'database': cfg.DATABASE,
-        'user': cfg.PG_USER,
-        'password': cfg.PASSWORD,
-        'port': cfg.PORT,
+        'host': cfg.PGHOST,
+        'database': cfg.PGDATABASE,
+        'user': cfg.PGUSER,
+        'password': cfg.PGPASSWORD,
+        'port': cfg.PGPORT,
     }
