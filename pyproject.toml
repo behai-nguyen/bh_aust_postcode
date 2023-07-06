@@ -27,6 +27,7 @@ dependencies = [
     'requests',    
     'click',
     'simplejson',
+    'gunicorn',
     'pytest',
     'coverage',
     'bh-apistatus',
