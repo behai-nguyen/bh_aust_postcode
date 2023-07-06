@@ -7,4 +7,4 @@ app = create_app()
 
 with app.app_context():
     load_postcode()
-    from bh_aust_postcode.commands import update_postcode
+    from src.bh_aust_postcode.commands import update_postcode
