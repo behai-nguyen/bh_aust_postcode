@@ -1,7 +1,7 @@
 """Flask Application entry point."""
 
-from bh_aust_postcode import create_app
-from bh_aust_postcode.api.postcode_pool import load_postcode
+from src.bh_aust_postcode import create_app
+from src.bh_aust_postcode.api.postcode_pool import load_postcode
 
 app = create_app()
 

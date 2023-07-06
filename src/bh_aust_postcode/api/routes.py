@@ -10,7 +10,7 @@ from http import HTTPStatus
 
 from flask_restx import Namespace, Resource
 
-from bh_aust_postcode.api.bro import search_by_locality
+from src.bh_aust_postcode.api.bro import search_by_locality
 
 tree_ns = Namespace( name="postcodes", validate=True )
 

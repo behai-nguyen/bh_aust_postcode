@@ -11,7 +11,7 @@ from http import HTTPStatus
 
 from bh_apistatus.result_status import make_status
 
-from bh_aust_postcode.api.postcode_pool import postcode_pool
+from src.bh_aust_postcode.api.postcode_pool import postcode_pool
 
 MIN_LOCALITY_LENGTH = 3
 

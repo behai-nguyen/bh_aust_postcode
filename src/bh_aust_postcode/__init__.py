@@ -9,7 +9,7 @@ import yaml
 import logging
 import logging.config
 
-from bh_aust_postcode.config import get_config
+from src.bh_aust_postcode.config import get_config
 
 cors = CORS()
 
