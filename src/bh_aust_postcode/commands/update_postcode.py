@@ -16,8 +16,8 @@ from flask import current_app as app
 
 from bh_utils.json_funcs import dumps
 
-from bh_aust_postcode.config import get_database_connection
-from bh_aust_postcode.utils import (
+from src.bh_aust_postcode.config import get_database_connection
+from src.bh_aust_postcode.utils import (
     print_log,
     format_sql_statement,
 )
