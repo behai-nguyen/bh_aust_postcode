@@ -26,7 +26,7 @@ def create_app(config=None):
 
     register_loggers()
 
-    from bh_aust_postcode.api import api_bp
+    from src.bh_aust_postcode.api import api_bp
     app.register_blueprint(api_bp)
 	
     cors.init_app(app)
