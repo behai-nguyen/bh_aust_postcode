@@ -113,17 +113,17 @@ def extract_and_insert():
         
         json_obj = data
 
-        print_log(logger, f"Total postcodes read: {len(json_obj)}", 'info')
+        print_log(logger, f"Total postcodes read: {len(json_obj)}", "info")
 
         write_downloaded_json_content(json_obj)
+
+        print_log(logger, "Processing started...", "info")
 
         #
         # raise Exception("This is a test only...")
         #
 
-        total_inserted = 0
-
-        for itm in json_obj:
+        for idx, itm in enumerate(json_obj, start=1):
             locality = itm['locality'].replace("'", "''")
             state = itm['state']
             postcode = itm['postcode']
@@ -132,12 +132,14 @@ def extract_and_insert():
                             f"VALUES ('{locality}', '{state}', '{postcode}')")
 
             cursor.execute(format_sql_statement(insert_query))
-            total_inserted += 1
+
+            if (idx % 1000 == 0):
+                print_log(logger, f"Inserted into database: {idx} / {len(json_obj)}.", 'info')
 
         connection.commit()
         cursor.close()
 
-        print_log(logger, f"Total postcodes inserted into database: {total_inserted}.", 'info')
+        print_log(logger, f"Total postcodes inserted into database: {idx} / {len(json_obj)}.", 'info')
 
     except Exception as e:
         print_log(logger, 'Error inserting {!r}'.format(e), 'exception')
