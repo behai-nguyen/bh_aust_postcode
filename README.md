@@ -10,15 +10,26 @@ https://www.matthewproctor.com/Content/postcodes/australian_postcodes.json
 
 This web API uses only ``locality``, ``state`` and ``postcode`` fields.
 
-## Stable Revision 
+## Railway.app Deployment (Hosting)
 
-### Tag <code>v0.0.1</code> -- July 3rd, 2023
+1. Swagger UI Documentation: [ https://web-production-ed7a.up.railway.app/api/v0/ui ](https://web-production-ed7a.up.railway.app/api/v0/ui).
+
+2. Endpoint API: <code>web-production-ed7a.up.railway.app/api/v0/aust-postcode/</code>.<br/>
+    E.g. To search for localities which contain ``spring``: [ https://web-production-ed7a.up.railway.app/api/v0/aust-postcode/spring ](https://web-production-ed7a.up.railway.app/api/v0/aust-postcode/spring).
+
+## Revisions 
+
+### Tag ```v0.0.1``` -- July 3rd, 2023
 
 This revision uses SQLite database file. Clone with:
 
 ```
-git clone -b v0.0.1 https://github.com/behai-nguyen/bh-aust-postcode.git
+git clone -b v0.0.1 https://github.com/behai-nguyen/bh_aust_postcode.git
 ```
+
+### Latest -- July 8th, 2023
+
+Latest revision only works with PostgreSQL database.
 
 ## Project Setup and Run the Development Web Server
 
@@ -102,11 +113,13 @@ Editable install project:
 (venv) behai@HP-Pavilion-15:~/webwork/bh_aust_postcode$ venv/bin/pip install -e .
 ```
 
-Install ``gunicorn`` separately:
+For tag ``v0.0.1``, install ``gunicorn`` separately:
 
 ```
 (venv) behai@HP-Pavilion-15:~/webwork/bh_aust_postcode$ venv/bin/pip install gunicorn
 ```
+
+Later revisions have ``gunicorn`` installed as part of editable install.
 
 ### Ubuntu 22.10 Run the Development Web Server
 
@@ -138,6 +151,10 @@ http://hp-pavilion-15:5000/api/v0/aust-postcode/spring
 
 There is nothing secured about this project 😂:
 
+### Tag ```v0.0.1```:
+
+Works with SQLite:
+
 ```
 SECRET_KEY=">s3g;?uV^K=`!(3.#ms_cdfy<c4ty%"
 FLASK_APP=app.py
@@ -146,6 +163,28 @@ FLASK_DEBUG=True
 SOURCE_POSTCODE_URL="http://localhost/work/australian_postcodes.json"
 SCHEMA="schema.sql"
 DATABASE="australian_postcode.db"
+```
+
+### Latest:
+
+Works with PostgreSQL:
+
+```
+SECRET_KEY=">s3g;?uV^K=`!(3.#ms_cdfy<c4ty%"
+FLASK_APP=app.py
+FLASK_DEBUG=True
+# SOURCE_POSTCODE_URL="https://www.matthewproctor.com/Content/postcodes/australian_postcodes.json"
+# SOURCE_POSTCODE_URL="http://192.168.0.17/australian_postcodes.json"
+SOURCE_POSTCODE_URL="http://localhost/work/australian_postcodes.json"
+KEEP_DOWNLOADED_POSTCODES=False
+DB_CREATE_SCRIPT="schema.sql"
+SCHEMA_NAME='bh_aust_postcode'
+POSTCODE_TABLE_NAME='postcode'
+PGHOST=localhost
+PGDATABASE=ompdev
+PGUSER=postgres
+PGPASSWORD=pcb.2176310315865259
+PGPORT=5432
 ```
 
 ## License
