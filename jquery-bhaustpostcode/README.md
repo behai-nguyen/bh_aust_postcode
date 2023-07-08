@@ -3,7 +3,7 @@
 A jQuery plugin which enables searching for Australian postcodes based on locality aka suburb.
 
 The back-end that this plugin uses is the web API written in Python, its repo is 
-[https://github.com/behai-nguyen/bh-aust-postcode](https://github.com/behai-nguyen/bh-aust-postcode/).
+[https://github.com/behai-nguyen/bh_aust_postcode](https://github.com/behai-nguyen/bh_aust_postcode/).
 
 Detail description of the web API can be found in this post:
 [Python: A simple web API to search for Australian postcodes based on locality aka suburb](https://behainguyen.wordpress.com/2023/05/18/python-a-simple-web-api-to-search-for-australian-postcodes-based-on-locality-aka-suburb/).
